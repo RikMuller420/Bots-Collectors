@@ -8,15 +8,14 @@ public class MushroomGenerator : MonoBehaviour
     private const int HitColliderMaxSize = 16;
 
     [SerializeField] private MushroomPool _pool;
-    [SerializeField] Transform _groundTransform;
+    [SerializeField] private Transform _groundTransform;
     [SerializeField] private float _mushroomPerMinute = 6f;
     [SerializeField] private LayerMask _buildingLayerMask;
-    [SerializeField] private float farAwayBuildingsRadius = 20f;
+    [SerializeField] private float _minDistanceFromBuildings = 20f;
 
     private WaitForSeconds _wait;
     private Coroutine _generateCoroutine;
     private Collider[] _colliderBuffer = new Collider[HitColliderMaxSize];
-
 
     private void Awake()
     {
@@ -46,13 +45,13 @@ public class MushroomGenerator : MonoBehaviour
     {
         while (enabled)
         {
-            CreateMushroom();
+            SpawnMushroom();
 
             yield return _wait;
         }
     }
 
-    private void CreateMushroom()
+    private void SpawnMushroom()
     {
         Mushroom mushroom = _pool.Get();
         mushroom.transform.position = GetSuitablePoint();
@@ -83,7 +82,7 @@ public class MushroomGenerator : MonoBehaviour
 
     private bool IsPointFarAwayFromBuildings(Vector3 localPoint)
     {
-        int hitCount = Physics.OverlapSphereNonAlloc(localPoint, farAwayBuildingsRadius,
+        int hitCount = Physics.OverlapSphereNonAlloc(localPoint, _minDistanceFromBuildings,
                                                     _colliderBuffer, _buildingLayerMask);
 
         return hitCount == 0;

@@ -9,7 +9,7 @@ public class UnitCollector : Unit
         base.Awake();
         ResourcePickUpper pickUpper = new ResourcePickUpper(_pickUpHolder);
 
-        AddTaskPerformer(typeof(PickUpTask), new PickUpTaskPerformer(Mover, pickUpper));
-        AddTaskPerformer(typeof(BringCollectableTask), new BringCollectableTaskPerformer(Mover, pickUpper));
+        AddTaskPerformer<PickUpTask>(new PickUpTaskPerformer(Mover, pickUpper));
+        AddTaskPerformer<BringCollectableTask>(new BringCollectableTaskPerformer(Mover, pickUpper));
     }
 }

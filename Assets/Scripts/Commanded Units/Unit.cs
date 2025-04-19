@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-public class Unit : PoolableObject
+public class Unit : MonoBehaviour
 {
     [SerializeField] private float _speed = 15f;
 
@@ -18,7 +18,7 @@ public class Unit : PoolableObject
     protected virtual void Awake()
     {
         Mover = new UnitMover(transform, _speed);
-        AddTaskPerformer(typeof(MoveTask), new MoveTaskPerformer(Mover));
+        AddTaskPerformer<MoveTask>(new MoveTaskPerformer(Mover));
     }
 
     private void FixedUpdate()
@@ -31,9 +31,9 @@ public class Unit : PoolableObject
         _tasks.Add(task);
     }
 
-    protected void AddTaskPerformer(System.Type type, TaskPerformer taskPerformer)
+    protected void AddTaskPerformer<T>(TaskPerformer taskPerformer) where T : UnitTask
     {
-        _tasksPerformers.Add(type, taskPerformer);
+        _tasksPerformers.Add(typeof(T), taskPerformer);
     }
 
     private void PerformTasksBehaviour()

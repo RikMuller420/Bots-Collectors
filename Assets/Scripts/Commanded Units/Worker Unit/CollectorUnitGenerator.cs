@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class CollectorUnitGenerator : MonoBehaviour
 {
-    [SerializeField] private CollectorUnitPool _pool;
+    [SerializeField] private UnitCollector _prefab;
 
     public void CreateWorkerUnit(Outpost outpost, int count = 1)
     {
         for (int i = 0; i < count; i++)
         {
-            UnitCollector unit = _pool.Get();
+            UnitCollector unit = Instantiate(_prefab);
             unit.transform.position = outpost.transform.position;
             outpost.UnitsController.AddUnit(unit);
         }

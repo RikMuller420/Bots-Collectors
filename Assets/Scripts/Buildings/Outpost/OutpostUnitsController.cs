@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class OutpostUnitsController
 {
@@ -7,13 +8,12 @@ public class OutpostUnitsController
     private UnitsCollectResourceBehaviour collectResourceBehaviour;
 
     public event Action UnitsChanged;
+    public int UnitsCount => _workerUnits.Count;
 
-    public OutpostUnitsController(Outpost outpost)
+    public void Initialize(Outpost outpost)
     {
         collectResourceBehaviour = new UnitsCollectResourceBehaviour(outpost);
     }
-
-    public int UnitsCount => _workerUnits.Count;
 
     public void UpdateBehaviour(List<ICollectableResource> aviableResources)
     {

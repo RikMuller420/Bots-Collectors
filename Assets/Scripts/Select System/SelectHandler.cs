@@ -5,7 +5,6 @@ public class SelectHandler : MonoBehaviour
 {
     [SerializeField] private InputHandler _inputHandler;
     [SerializeField] private SellectArrow _sellectArrow;
-    [SerializeField] private SelectableObjectViewer _selectableViewer;
 
     private ISelectable _currentSelection;
     private Camera _camera;
@@ -18,12 +17,11 @@ public class SelectHandler : MonoBehaviour
     private void OnEnable()
     {
         _inputHandler.MouseClicked += TrySelect;
-        _selectableViewer.ViewHided += OnViewHided;
     }
+
     private void OnDisable()
     {
         _inputHandler.MouseClicked -= TrySelect;
-        _selectableViewer.ViewHided -= OnViewHided;
     }
 
     private void TrySelect()
@@ -35,15 +33,13 @@ public class SelectHandler : MonoBehaviour
         {
             if (hit.collider.TryGetComponent(out ISelectable selectable))
             {
-                _selectableViewer.ShowView(selectable);
                 _sellectArrow.TrackObject(selectable);
                 _currentSelection = selectable;
+
+                return;
             }
         }
-    }
 
-    private void OnViewHided()
-    {
         _sellectArrow.Hide();
     }
 }

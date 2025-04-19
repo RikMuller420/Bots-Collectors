@@ -1,55 +1,34 @@
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class OutpostViewer : MonoBehaviour, ISelecatbleViewer
+public class OutpostViewer : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup _canvasGroup;
-    [SerializeField] private Button _closeButton;
+    [SerializeField] private Outpost _outpost;
     [SerializeField] private TextMeshProUGUI _mushroomAmountText;
     [SerializeField] private TextMeshProUGUI _unitsAmountText;
 
-    private Outpost _outpost = null;
+    private Camera _mainCamera;
 
-    public event Action Hided;
+    private void Awake()
+    {
+        _mainCamera = Camera.main;
+    }
 
     private void OnEnable()
     {
-        _closeButton.onClick.AddListener(Hide);
+        _outpost.Storage.ResourcesAmountChanged += UpdateResourceView;
+        _outpost.UnitsController.UnitsChanged += UpdateUnitsView;
     }
 
     private void OnDisable()
     {
-        _closeButton.onClick.RemoveListener(Hide);
+        _outpost.Storage.ResourcesAmountChanged -= UpdateResourceView;
+        _outpost.UnitsController.UnitsChanged -= UpdateUnitsView;
     }
 
-    public void Show(ISelectable selectable)
+    private void Update()
     {
-        Outpost outpost = selectable as Outpost;
-        _outpost = outpost;
-        _outpost.Storage.ResourcesAmountChanged += UpdateResourceView;
-        _outpost.UnitsController.UnitsChanged += UpdateUnitsView;
-
-        UpdateResourceView();
-        UpdateUnitsView();
-
-        _canvasGroup.alpha = 1f;
-        _canvasGroup.blocksRaycasts = true;
-    }
-
-    public void Hide()
-    {
-        if (_outpost != null)
-        {
-            _outpost.Storage.ResourcesAmountChanged -= UpdateResourceView;
-            _outpost.UnitsController.UnitsChanged -= UpdateUnitsView;
-            _outpost = null;
-        }
-
-        _canvasGroup.alpha = 0f;
-        _canvasGroup.blocksRaycasts = false;
-        Hided?.Invoke();
+        transform.LookAt(_mainCamera.transform);
     }
 
     private void UpdateResourceView()
