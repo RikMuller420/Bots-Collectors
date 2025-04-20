@@ -1,6 +1,6 @@
 public class BringCollectableTask : UnitTask
 {
-    public Outpost Destination;
+    public Outpost Destination { get; }
 
     public BringCollectableTask(Outpost destination)
     {

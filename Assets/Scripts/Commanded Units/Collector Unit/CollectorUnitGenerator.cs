@@ -4,7 +4,7 @@ public class CollectorUnitGenerator : MonoBehaviour
 {
     [SerializeField] private UnitCollector _prefab;
 
-    public void CreateWorkerUnit(Outpost outpost, int count = 1)
+    public void SpawnCollectorUnit(Outpost outpost, int count = 1)
     {
         for (int i = 0; i < count; i++)
         {
@@ -13,5 +13,4 @@ public class CollectorUnitGenerator : MonoBehaviour
             outpost.UnitsController.AddUnit(unit);
         }
     }
-
 }

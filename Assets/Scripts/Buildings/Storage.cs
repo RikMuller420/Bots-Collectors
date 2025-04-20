@@ -26,13 +26,37 @@ public class Storage
         }
     }
 
-    public int GetResourceAmount(Type resourceType)
+    public int GetResourceAmount<T>() where T : ICollectableResource
     {
-        if (_resourcesAmounts.ContainsKey(resourceType))
+        if (_resourcesAmounts.ContainsKey(typeof(T)))
         {
-            return _resourcesAmounts[resourceType];
+            return _resourcesAmounts[typeof(T)];
         }
 
         return 0;
+    }
+
+    public bool TryRemoveResources<T>(int amount) where T : ICollectableResource
+    {
+        if (amount < 0)
+        {
+            return false;
+        }
+
+        Type resourceType = typeof(T);
+
+        if (_resourcesAmounts.ContainsKey(resourceType) == false)
+        {
+            return false;
+        }
+
+        if (_resourcesAmounts[resourceType] < amount)
+        {
+            return false;
+        }
+
+        _resourcesAmounts[resourceType] -= amount;
+
+        return true;
     }
 }

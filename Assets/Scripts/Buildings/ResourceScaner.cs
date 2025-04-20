@@ -13,7 +13,7 @@ public class ResourceScaner : MonoBehaviour
     private Collider[] _overlapBuffer = new Collider[MaxResourceCount];
     private WaitForSeconds _wait;
 
-    public event Action<List<ICollectableResource>> ResourceScanPerformed;
+    public event Action<List<ICollectableResource>> ScanPerformed;
 
     private void Start()
     {
@@ -28,7 +28,7 @@ public class ResourceScaner : MonoBehaviour
             yield return _wait;
 
             List<ICollectableResource> resources = GetResourcesInArea();
-            ResourceScanPerformed?.Invoke(resources);
+            ScanPerformed?.Invoke(resources);
         }
     }
 

@@ -284,7 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 863d6d38a634601428529015ab62532a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 15
+  _speed: 30
   _pickUpHolder: {fileID: 8172477547596300778}
 --- !u!136 &5100337362015852707
 CapsuleCollider:

@@ -1,19 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class UnitsCollectResourceBehaviour
+public class CollectResourceTaskSetter : UnitsTaskSetter
 {
-    private Outpost _outpost;
-
-    public UnitsCollectResourceBehaviour(Outpost outpost)
-    {
-        _outpost = outpost;
-    }
+    public CollectResourceTaskSetter(Outpost outpost) : base(outpost) { }
 
     public void SendToCollect(List<UnitCollector> units, List<ICollectableResource> aviableResources)
     {
         foreach (ICollectableResource resource in aviableResources)
         {
+            if (resource.IsEnabled == false)
+            {
+                continue;
+            }
+
             if (IsAnyUnitSendedToCollect(units, resource))
             {
                 continue;
@@ -26,27 +26,10 @@ public class UnitsCollectResourceBehaviour
         }
     }
 
-    private bool TryFindFreeUnit(List<UnitCollector> units, out UnitCollector freeUnit)
-    {
-        freeUnit = null;
-
-        foreach (UnitCollector worker in units)
-        {
-            if (worker.IsFree)
-            {
-                freeUnit = worker;
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private void SendUnitToCollect(UnitCollector worker, ICollectableResource resource)
     {
         PickUpTask pickUp = new PickUpTask(resource);
-        BringCollectableTask backToBase = new BringCollectableTask(_outpost);
+        BringCollectableTask backToBase = new BringCollectableTask(Outpost);
 
         worker.AddTask(pickUp);
         worker.AddTask(backToBase);

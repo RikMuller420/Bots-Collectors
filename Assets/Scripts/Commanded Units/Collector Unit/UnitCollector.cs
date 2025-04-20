@@ -11,5 +11,6 @@ public class UnitCollector : Unit
 
         AddTaskPerformer<PickUpTask>(new PickUpTaskPerformer(Mover, pickUpper));
         AddTaskPerformer<BringCollectableTask>(new BringCollectableTaskPerformer(Mover, pickUpper));
+        AddTaskPerformer<BuildTask>(new BuildTaskPerformer(Mover));
     }
 }

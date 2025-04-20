@@ -2,17 +2,16 @@ using UnityEngine;
 
 public class Game : MonoBehaviour
 {
-    [SerializeField] private int startWorkerUnitCount = 3;
+    [SerializeField] private int _startWorkerUnitCount = 3;
 
     private MushroomGenerator _mushroomGenerator;
-    private Outpost _startOutpost;
-    private CollectorUnitGenerator _collectorUnitGenerator;
 
-    public void Initialize(MushroomGenerator mushroomGenerator, Outpost startOutpost, CollectorUnitGenerator collectorUnitGenerator)
+    public void Initialize(MushroomGenerator mushroomGenerator, OutpostInitializer startOutpost,
+                            CollectorUnitGenerator collectorUnitGenerator, OutpostBuilder outpostBuilder,
+                            MouseHandler mouseHandler)
     {
         _mushroomGenerator = mushroomGenerator;
-        _startOutpost = startOutpost;
-        _collectorUnitGenerator = collectorUnitGenerator;
+        startOutpost.Initialize(mouseHandler, collectorUnitGenerator, outpostBuilder, _startWorkerUnitCount);
     }
 
     private void Start()
@@ -23,6 +22,5 @@ public class Game : MonoBehaviour
     private void StartGame()
     {
         _mushroomGenerator.StartGenrate();
-        _collectorUnitGenerator.CreateWorkerUnit(_startOutpost, startWorkerUnitCount);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
@@ -10,7 +11,9 @@ public class Unit : MonoBehaviour
 
     private UnitTask _currentTask;
     private List<UnitTask> _tasks = new List<UnitTask>();
-    private Dictionary<System.Type, TaskPerformer> _tasksPerformers = new();
+    private Dictionary<Type, TaskPerformer> _tasksPerformers = new();
+
+    public event Action TasksIsDone;
 
     public bool IsFree => _tasks.Count == 0;
     public ReadOnlyCollection<UnitTask> Tasks => _tasks.AsReadOnly();
@@ -64,6 +67,11 @@ public class Unit : MonoBehaviour
     {
         _tasks.Remove(_currentTask);
         _currentTask = null;
+
+        if (_tasks.Count == 0)
+        {
+            TasksIsDone?.Invoke();
+        }
     }
 
     private void PerformTask(UnitTask task)

@@ -25,14 +25,6 @@ public class InputHandler : MonoBehaviour
         _playerInput.Disable();
     }
 
-    private void Update()
-    {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            MouseClicked?.Invoke();
-        }
-    }
-
     private void OnClick(InputAction.CallbackContext context)
     {
         MouseClicked?.Invoke();
