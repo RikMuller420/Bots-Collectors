@@ -18,7 +18,7 @@ public class ResourceCoordinator
         scaner.ScanPerformed -= ResourceScanned;
     }
 
-    public List<ICollectableResource> AviableResources()
+    public List<ICollectableResource> GetAviableResources()
     {
         return new List<ICollectableResource>(_freeResources);
     }

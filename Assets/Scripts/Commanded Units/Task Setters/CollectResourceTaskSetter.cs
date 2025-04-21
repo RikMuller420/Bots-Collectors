@@ -7,7 +7,7 @@ public class CollectResourceTaskSetter : UnitsTaskSetter
 
     public void SendToCollect(List<UnitCollector> units, ResourceCoordinator resourceCoordinator)
     {
-        foreach (ICollectableResource resource in resourceCoordinator.AviableResources())
+        foreach (ICollectableResource resource in resourceCoordinator.GetAviableResources())
         {
             if (resource.IsEnabled == false)
             {
