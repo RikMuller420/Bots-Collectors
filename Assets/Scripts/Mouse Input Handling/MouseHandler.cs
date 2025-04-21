@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MouseHandler : MonoBehaviour
@@ -10,23 +11,21 @@ public class MouseHandler : MonoBehaviour
 
     private void Awake()
     {
-        _buildBehaviour.Initialize(ResetBehaviour);
+        Func<Vector2> getCursorPosition = () => _inputHandler.MousePosition;
+        _buildBehaviour.Initialize(ResetBehaviour, getCursorPosition);
         ResetBehaviour();
     }
 
     private void OnEnable()
     {
         _inputHandler.MouseClicked += ProcessClick;
+        _inputHandler.MouseMoved += ProcessCursorMove;
     }
 
     private void OnDisable()
     {
         _inputHandler.MouseClicked -= ProcessClick;
-    }
-
-    private void ProcessClick()
-    {
-        _clickBehaviour.ProcessClick();
+        _inputHandler.MouseMoved -= ProcessCursorMove;
     }
 
     public void StartBuildBehaviour<T>(IBuildingOwner owner) where T : IBuildable
@@ -39,5 +38,15 @@ public class MouseHandler : MonoBehaviour
     {
         _selectBehaviour.HideArrow();
         _clickBehaviour = _selectBehaviour;
+    }
+
+    private void ProcessClick(Vector2 clickPosition)
+    {
+        _clickBehaviour.ProcessClick(clickPosition);
+    }
+
+    private void ProcessCursorMove(Vector2 clickPosition)
+    {
+        _clickBehaviour.ProcessCursorMove(clickPosition);
     }
 }

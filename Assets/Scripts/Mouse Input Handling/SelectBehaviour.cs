@@ -1,14 +1,12 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class SelectBehaviour : ClickBehaviour
 {
     [SerializeField] private SellectArrow _sellectArrow;
 
-    public override void ProcessClick()
+    public override void ProcessClick(Vector2 clickPosition)
     {
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Ray ray = Camera.ScreenPointToRay(mousePosition);
+        Ray ray = Camera.ScreenPointToRay(clickPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
         {

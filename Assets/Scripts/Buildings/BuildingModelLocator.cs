@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class BuildingModelLocator : MonoBehaviour
 {
@@ -10,21 +10,35 @@ public class BuildingModelLocator : MonoBehaviour
     private Collider _ground;
     private LayerMask _layerMask;
     private Camera _camera;
+    private Func<Vector2> _getCursorPosition;
 
     public Vector3 BuildPosition { get; private set; }
     public bool IsAbleToBuild { get; private set; }
 
-    public void Initialize(Camera camera, Collider ground, LayerMask layerMask)
+    public void Initialize(Camera camera, Collider ground, LayerMask layerMask,
+                            Func<Vector2> getCursorPosition)
     {
         _camera = camera;
         _ground = ground;
         _layerMask = layerMask;
+        _getCursorPosition = getCursorPosition;
     }
 
-    public void UpdateModelPosition()
+    public void Activate()
     {
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Ray ray = _camera.ScreenPointToRay(mousePosition);
+        UpdateModelPosition(_getCursorPosition());
+        enabled = true;
+    }
+
+    public void Deactivate()
+    {
+        DeactivateModels();
+        enabled = false;
+    }
+
+    public void UpdateModelPosition(Vector2 cursorPosition)
+    {
+        Ray ray = _camera.ScreenPointToRay(cursorPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, _maxRayDistance, _layerMask) == false)
         {
@@ -39,7 +53,7 @@ public class BuildingModelLocator : MonoBehaviour
         BuildPosition = hit.point;
     }
 
-    public void DeactivateModels()
+    private void DeactivateModels()
     {
         _model.SetActive(false);
         _modelRed.SetActive(false);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 public class BuildBehaviour : ClickBehaviour
@@ -13,16 +14,11 @@ public class BuildBehaviour : ClickBehaviour
     private Action<Vector3> _buildDelegate;
     private Action _endBehaviourDelegate;
 
-    private void Update()
-    {
-        _locator.UpdateModelPosition();
-    }
-
-    public void Initialize(Action endBehaviourDelegate)
+    public void Initialize(Action endBehaviourDelegate, Func<Vector2> getCursorPosition)
     {
         base.Awake();
         _endBehaviourDelegate = endBehaviourDelegate;
-        _outpostLocator.Initialize(Camera, _ground, _layerMask);
+        _outpostLocator.Initialize(Camera, _ground, _layerMask, getCursorPosition);
 
         _buildingLocators = new Dictionary<Type, BuildingModelLocator>()
         {
@@ -30,7 +26,7 @@ public class BuildBehaviour : ClickBehaviour
         };
     }
 
-    public override void ProcessClick()
+    public override void ProcessClick(Vector2 clickPosition)
     {
         if (_locator.IsAbleToBuild)
         {
@@ -38,6 +34,11 @@ public class BuildBehaviour : ClickBehaviour
             Deactivate();
             _endBehaviourDelegate?.Invoke();
         }
+    }
+
+    public override void ProcessCursorMove(Vector2 cursorPosition)
+    {
+        _locator.UpdateModelPosition(cursorPosition);
     }
 
     public void Activate<T>(IBuildingOwner owner) where T : IBuildable
@@ -50,14 +51,13 @@ public class BuildBehaviour : ClickBehaviour
             _locator = _buildingLocators[buildingType];
         }
 
-        _locator.enabled = true;
+        _locator.Activate();
         enabled = true;
     }
 
     private void Deactivate()
     {
-        _locator.DeactivateModels();
-        _locator.enabled = false;
+        _locator.Deactivate();
         enabled = false;
     }
 }

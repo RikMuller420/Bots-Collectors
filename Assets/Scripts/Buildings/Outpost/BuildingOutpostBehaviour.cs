@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildingOutpostBehaviour : OutpostBehaviour
@@ -9,15 +8,14 @@ public class BuildingOutpostBehaviour : OutpostBehaviour
     private bool _isBuildingStarted = false;
     private Action<UnitCollector, BuildingFlag> _buildIsDoneDelegate;
 
-    public BuildingOutpostBehaviour(Outpost outpost, BuildingFlag flag, OutpostUnitsController unitsController) :
-                                base(outpost, unitsController)
+    public BuildingOutpostBehaviour(Outpost outpost, BuildingFlag flag, OutpostUnitsController unitsController,
+                                    ResourceCoordinator resourceCoordinator) : base(outpost, unitsController, resourceCoordinator)
     {
         _flag = flag;
     }
 
-    public override void OnResourceScanPerformed(List<ICollectableResource> aviableResources)
+    public override void OnResourceDetected()
     {
-        AviableResources = aviableResources;
         TrySendUnitsToCollectResources();
     }
 
@@ -29,7 +27,6 @@ public class BuildingOutpostBehaviour : OutpostBehaviour
     public override void OnUnitBecameFree()
     {
         TryBuildOutpost();
-        UpdateAviableResources();
         TrySendUnitsToCollectResources();
     }
 

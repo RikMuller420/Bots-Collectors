@@ -5,13 +5,13 @@ public abstract class UnitTask
     private Action _performedDelegate;
     private Action _failedDelegate;
 
-    public void SetPerformedDelegate(Action performedDelegate)
+    public void AddPerformedDelegate(Action performedDelegate)
     {
-        _performedDelegate = performedDelegate;
+        _performedDelegate += performedDelegate;
     }
-    public void SetFailedDelegate(Action failedDelegate)
+    public void AddFailedDelegate(Action failedDelegate)
     {
-        _failedDelegate = failedDelegate;
+        _failedDelegate += failedDelegate;
     }
 
     public void OnPerformed()

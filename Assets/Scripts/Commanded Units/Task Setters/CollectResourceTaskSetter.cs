@@ -5,9 +5,9 @@ public class CollectResourceTaskSetter : UnitsTaskSetter
 {
     public CollectResourceTaskSetter(Outpost outpost) : base(outpost) { }
 
-    public void SendToCollect(List<UnitCollector> units, List<ICollectableResource> aviableResources)
+    public void SendToCollect(List<UnitCollector> units, ResourceCoordinator resourceCoordinator)
     {
-        foreach (ICollectableResource resource in aviableResources)
+        foreach (ICollectableResource resource in resourceCoordinator.AviableResources())
         {
             if (resource.IsEnabled == false)
             {
@@ -21,15 +21,19 @@ public class CollectResourceTaskSetter : UnitsTaskSetter
 
             if (TryFindFreeUnit(units, out UnitCollector freeUnit))
             {
-                SendUnitToCollect(freeUnit, resource);
+
+                SendUnitToCollect(freeUnit, resource, resourceCoordinator);
+                resourceCoordinator.ReserveResource(resource);
             }
         }
     }
 
-    private void SendUnitToCollect(UnitCollector worker, ICollectableResource resource)
+    private void SendUnitToCollect(UnitCollector worker, ICollectableResource resource,
+                                    ResourceCoordinator resourceCoordinator)
     {
         PickUpTask pickUp = new PickUpTask(resource);
         BringCollectableTask backToBase = new BringCollectableTask(Outpost);
+        backToBase.AddPerformedDelegate(() => resourceCoordinator.ReleaseBusyResource(resource));
 
         worker.AddTask(pickUp);
         worker.AddTask(backToBase);

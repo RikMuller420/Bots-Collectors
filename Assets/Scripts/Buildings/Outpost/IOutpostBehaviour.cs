@@ -4,5 +4,5 @@ public interface IOutpostBehaviour
 {
     public void OnStorageUpdated();
     public void OnUnitBecameFree();
-    public void OnResourceScanPerformed(List<ICollectableResource> aviableResources);
+    public void OnResourceDetected();
 }

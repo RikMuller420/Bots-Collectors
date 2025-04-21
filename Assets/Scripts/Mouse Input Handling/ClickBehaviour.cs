@@ -9,5 +9,6 @@ public abstract class ClickBehaviour : MonoBehaviour
         Camera = Camera.main;
     }
 
-    public abstract void ProcessClick();
+    public abstract void ProcessClick(Vector2 clickPosition);
+    public virtual void ProcessCursorMove(Vector2 cursorPosition) { }
 }

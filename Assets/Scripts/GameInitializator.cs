@@ -11,6 +11,7 @@ public class GameInitializator : MonoBehaviour
 
     private void Awake()
     {
-        _game.Initialize(_mushroomGenerator, _startOutpost, _collectorUnitGenerator, _outpostBuilder, _mouseHandler);
+        _game.Initialize(_mushroomGenerator, _startOutpost, _collectorUnitGenerator,
+                        _outpostBuilder, _mouseHandler);
     }
 }

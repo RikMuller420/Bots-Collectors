@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Outpost : MonoBehaviour, ISelectable, IBuildable, IBuildingOwner
@@ -12,6 +11,7 @@ public class Outpost : MonoBehaviour, ISelectable, IBuildable, IBuildingOwner
     private OutpostUnitsController _unitsController;
     private CollectorUnitGenerator _collectorUnitGenerator;
     private OutpostBuilder _outpostBuilder;
+    private ResourceCoordinator _resourceCoordinator;
 
     private IOutpostBehaviour _outpostBehaviour;
     private GeneratingUnitBehaviour _generatingUnitBehaviour;
@@ -25,28 +25,32 @@ public class Outpost : MonoBehaviour, ISelectable, IBuildable, IBuildingOwner
 
     private void OnEnable()
     {
-        _resourceScaner.ScanPerformed += OnResourceScanPerformed;
         _storage.ResourcesAmountChanged += OnStorageUpdated;
         _unitsController.SomeUnitBecameFree += OnUnitBecameFree;
+        _resourceCoordinator.SubscribeScaner(_resourceScaner);
+        _resourceCoordinator.ResourceDetected += ResourceDetected;
     }
 
     private void OnDisable()
     {
-        _resourceScaner.ScanPerformed -= OnResourceScanPerformed;
         _storage.ResourcesAmountChanged -= OnStorageUpdated;
         _unitsController.SomeUnitBecameFree -= OnUnitBecameFree;
+        _resourceCoordinator.UnsubscribeScaner(_resourceScaner);
+        _resourceCoordinator.ResourceDetected -= ResourceDetected;
     }
 
     public void Initialize(CollectorUnitGenerator collectorUnitGenerator, OutpostBuilder outpostBuilder,
-                            Action<Outpost> locateFlagDelegate)
+                            Action<Outpost> locateFlagDelegate, ResourceCoordinator resourceCoordinator)
     {
-        _storage = new Storage();
-        _unitsController = new OutpostUnitsController(this);
         _collectorUnitGenerator = collectorUnitGenerator;
         _locateFlagDelegate = locateFlagDelegate;
         _outpostBuilder = outpostBuilder;
-        _generatingUnitBehaviour = new GeneratingUnitBehaviour(this, collectorUnitGenerator, _unitsController);
-        _buildingOutpostBehaviour = new BuildingOutpostBehaviour(this, _flag, _unitsController);
+        _resourceCoordinator = resourceCoordinator;
+
+        _storage = new Storage();
+        _unitsController = new OutpostUnitsController(this);
+        _generatingUnitBehaviour = new GeneratingUnitBehaviour(this, collectorUnitGenerator, _unitsController, resourceCoordinator);
+        _buildingOutpostBehaviour = new BuildingOutpostBehaviour(this, _flag, _unitsController, resourceCoordinator);
         _outpostBehaviour = _generatingUnitBehaviour;
 
         enabled = true;
@@ -62,9 +66,9 @@ public class Outpost : MonoBehaviour, ISelectable, IBuildable, IBuildingOwner
         _outpostBehaviour.OnStorageUpdated();
     }
 
-    private void OnResourceScanPerformed(List<ICollectableResource> aviableResources)
+    private void ResourceDetected()
     {
-        _outpostBehaviour.OnResourceScanPerformed(aviableResources);
+        _outpostBehaviour.OnResourceDetected();
     }
 
     private void OnUnitBecameFree()
@@ -89,8 +93,8 @@ public class Outpost : MonoBehaviour, ISelectable, IBuildable, IBuildingOwner
     private void BuildOutpost(UnitCollector worker, BuildingFlag flag)
     {
         UnitsController.RemoveUnit(worker);
-        _outpostBuilder.BuildOutpost(worker, _locateFlagDelegate,
-                                    _collectorUnitGenerator, flag.transform.position);
+        _outpostBuilder.BuildOutpost(worker, _locateFlagDelegate, _collectorUnitGenerator,
+                                    _resourceCoordinator, flag.transform.position);
         flag.Deactivate();
         _buildingOutpostBehaviour.Deactivate();
         _outpostBehaviour = _generatingUnitBehaviour;

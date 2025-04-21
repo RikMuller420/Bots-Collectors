@@ -7,19 +7,20 @@ public class OutpostInitializer : MonoBehaviour
     [SerializeField] private OutpostViewer _outpostViewer;
 
     public void Initialize(MouseHandler mouseHandler, CollectorUnitGenerator collectorUnitGenerator,
-                            OutpostBuilder outpostBuilder, int collectorUnits = 0)
+                            OutpostBuilder outpostBuilder, ResourceCoordinator resourceCoordinator,
+                            int collectorUnits = 0)
     {
         Action<Outpost> locateOutpostFlag = (outpost) => { mouseHandler.StartBuildBehaviour<Outpost>(outpost); };
 
-        _outpost.Initialize(collectorUnitGenerator, outpostBuilder, locateOutpostFlag);
+        _outpost.Initialize(collectorUnitGenerator, outpostBuilder, locateOutpostFlag, resourceCoordinator);
         _outpostViewer.Initialize(_outpost);
         collectorUnitGenerator.SpawnCollectorUnit(_outpost, collectorUnits);
     }
 
     public void Initialize(Action<Outpost> locateOutpostFlag, CollectorUnitGenerator collectorUnitGenerator,
-                            OutpostBuilder outpostBuilder, UnitCollector unit)
+                            OutpostBuilder outpostBuilder, ResourceCoordinator resourceCoordinator, UnitCollector unit)
     {
-        _outpost.Initialize(collectorUnitGenerator, outpostBuilder, locateOutpostFlag);
+        _outpost.Initialize(collectorUnitGenerator, outpostBuilder, locateOutpostFlag, resourceCoordinator);
         _outpostViewer.Initialize(_outpost);
         _outpost.UnitsController.AddUnit(unit);
     }

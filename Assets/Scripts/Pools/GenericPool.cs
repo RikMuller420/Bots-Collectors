@@ -38,15 +38,11 @@ public class GenericPool<T> : MonoBehaviour where T : PoolableObject
         }
     }
 
-    protected virtual void InitializeObject(PoolableObject instance) { }
-    protected virtual void DeinitializeObject(PoolableObject instance) { }
-
     private T InstantiatePrefab()
     {
         T instance = Instantiate(_prefab);
         instance.gameObject.SetActive(false);
         instance.Deactivated += ReleaseInPool;
-        InitializeObject(instance);
 
         return instance;
     }
@@ -71,7 +67,6 @@ public class GenericPool<T> : MonoBehaviour where T : PoolableObject
     private void DestroyObject(PoolableObject instance)
     {
         instance.Deactivated -= ReleaseInPool;
-        DeinitializeObject(instance);
         Destroy(instance);
     }
 }

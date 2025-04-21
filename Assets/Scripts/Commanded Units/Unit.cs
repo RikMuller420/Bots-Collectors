@@ -59,8 +59,8 @@ public class Unit : MonoBehaviour
     private void AssignCurrentTask(UnitTask task)
     {
         _currentTask = task;
-        _currentTask.SetPerformedDelegate(RemoveCurrentTask);
-        _currentTask.SetFailedDelegate(RemoveCurrentTask);
+        _currentTask.AddPerformedDelegate(RemoveCurrentTask);
+        _currentTask.AddFailedDelegate(RemoveCurrentTask);
     }
 
     private void RemoveCurrentTask()

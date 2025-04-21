@@ -1,19 +1,17 @@
-﻿using System.Collections.Generic;
-
-public class GeneratingUnitBehaviour : OutpostBehaviour
+﻿public class GeneratingUnitBehaviour : OutpostBehaviour
 {
     private CollectorUnitGenerator _collectorUnitGenerator;
     private int _mushroomPerUnit = 3;
 
     public GeneratingUnitBehaviour(Outpost outpost, CollectorUnitGenerator collectorUnitGenerator,
-                                OutpostUnitsController unitsController) : base(outpost, unitsController)
+                                OutpostUnitsController unitsController, ResourceCoordinator resourceCoordinator) :
+                                base(outpost, unitsController, resourceCoordinator)
     {
         _collectorUnitGenerator = collectorUnitGenerator;
     }
 
-    public override void OnResourceScanPerformed(List<ICollectableResource> aviableResources)
+    public override void OnResourceDetected()
     {
-        AviableResources = aviableResources;
         TrySendUnitsToCollectResources();
     }
 
@@ -24,7 +22,6 @@ public class GeneratingUnitBehaviour : OutpostBehaviour
 
     public override void OnUnitBecameFree()
     {
-        UpdateAviableResources();
         TrySendUnitsToCollectResources();
     }
 

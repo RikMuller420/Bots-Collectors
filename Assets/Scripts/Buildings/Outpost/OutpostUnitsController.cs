@@ -35,9 +35,9 @@ public class OutpostUnitsController
         unit.TasksIsDone -= UnitBecameFree;
     }
 
-    public void SendFreeUnitsToCollect(List<ICollectableResource> aviableResources)
+    public void SendFreeUnitsToCollect(ResourceCoordinator resourceCoordinator)
     {
-        _collectResourceTaskSetter.SendToCollect(new List<UnitCollector>(_workerUnits), aviableResources);
+        _collectResourceTaskSetter.SendToCollect(new List<UnitCollector>(_workerUnits), resourceCoordinator);
     }
 
     public void SendFreeUnitToBuild(BuildingFlag target, Action<UnitCollector, BuildingFlag> buildIsDone)

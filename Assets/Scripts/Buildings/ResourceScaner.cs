@@ -27,8 +27,7 @@ public class ResourceScaner : MonoBehaviour
         {
             yield return _wait;
 
-            List<ICollectableResource> resources = GetResourcesInArea();
-            ScanPerformed?.Invoke(resources);
+            ScanPerformed?.Invoke(GetResourcesInArea());
         }
     }
 

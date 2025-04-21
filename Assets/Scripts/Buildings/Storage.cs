@@ -3,17 +3,9 @@ using System.Collections.Generic;
 
 public class Storage
 {
-    private Dictionary<Type, int> _resourcesAmounts;
+    private Dictionary<Type, int> _resourcesAmounts = new();
 
     public event Action ResourcesAmountChanged;
-
-    public Storage()
-    {
-        _resourcesAmounts = new Dictionary<Type, int>()
-        {
-            { typeof(Mushroom), 0 }
-        };
-    }
 
     public void AddResource(ICollectableResource resource)
     {
@@ -22,8 +14,13 @@ public class Storage
         if (_resourcesAmounts.ContainsKey(resourceType))
         {
             _resourcesAmounts[resourceType]++;
-            ResourcesAmountChanged?.Invoke();
         }
+        else
+        {
+            _resourcesAmounts.Add(resourceType, 1);
+        }
+
+        ResourcesAmountChanged?.Invoke();
     }
 
     public int GetResourceAmount<T>() where T : ICollectableResource
